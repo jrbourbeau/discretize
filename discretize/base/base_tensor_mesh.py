@@ -141,7 +141,7 @@ class BaseTensorMesh(BaseRegularMesh):
     def origin(self, value):  # NOQA D102
         # ensure value is a 1D array at all times
         try:
-            value = list(value)
+            value = value.tolist()
         except TypeError:
             raise TypeError("origin must be iterable")
         if len(value) != self.dim:
@@ -151,7 +151,7 @@ class BaseTensorMesh(BaseRegularMesh):
                 value[i] = -h_i.sum() * 0.5
             elif val == "N":
                 value[i] = -h_i.sum()
-        value = np.asarray(value, dtype=np.float64)
+        value = np.asarray(value, dtype=np.float64, like=value)
         self._origin = value
 
     @property
