@@ -6067,10 +6067,10 @@ cdef class _TreeMesh:
         indArr, levels = state
         indArr = np.asarray(indArr, like=indArr)
         levels = np.asarray(levels, like=levels)
-        xs = np.array(self._xs)
-        ys = np.array(self._ys)
+        xs = np.asarray(self._xs)
+        ys = np.asarray(self._ys)
         if self._dim == 3:
-            zs = np.array(self._zs)
+            zs = np.asarray(self._zs)
             points = np.column_stack((xs[indArr[:, 0]],
                                       ys[indArr[:, 1]],
                                       zs[indArr[:, 2]]))
