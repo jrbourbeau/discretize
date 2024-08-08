@@ -4,6 +4,48 @@ import scipy.sparse as sp
 from discretize.utils.code_utils import is_scalar, deprecate_function
 import warnings
 
+def is_arraylike(x) -> bool:
+    """Is this object a numpy array or something similar?
+
+    This function tests specifically for an object that already has
+    array attributes (e.g. np.ndarray, dask.array.Array, cupy.ndarray,
+    sparse.COO), **NOT** for something that can be coerced into an
+    array object (e.g. Python lists and tuples). It is meant for dask
+    developers and developers of downstream libraries.
+
+    Note that this function does not correspond with NumPy's
+    definition of array_like, which includes any object that can be
+    coerced into an array (see definition in the NumPy glossary):
+    https://numpy.org/doc/stable/glossary.html
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> is_arraylike(np.ones(5))
+    True
+    >>> is_arraylike(np.ones(()))
+    True
+    >>> is_arraylike(5)
+    False
+    >>> is_arraylike('cat')
+    False
+    """
+    # from dask.base import is_dask_collection
+
+    is_duck_array = hasattr(x, "__array_function__") or hasattr(x, "__array_ufunc__")
+
+    return bool(
+        hasattr(x, "shape")
+        and isinstance(x.shape, tuple)
+        and hasattr(x, "dtype")
+        # and not any(is_dask_collection(n) for n in x.shape)
+        # We special case scipy.sparse and cupyx.scipy.sparse arrays as having partial
+        # support for them is useful in scenarios where we mostly call `map_partitions`
+        # or `map_blocks` with scikit-learn functions on dask arrays and dask dataframes.
+        # https://github.com/dask/dask/pull/3738
+        # and (is_duck_array or "scipy.sparse" in typename(type(x)))
+    )
+
 
 def mkvc(x, n_dims=1, **kwargs):
     """Coerce a vector to the specified dimensionality.
@@ -69,7 +111,7 @@ def mkvc(x, n_dims=1, **kwargs):
     if isinstance(x, Zero):
         return x
 
-    if not isinstance(x, np.ndarray):
+    if not is_arraylike(x):
         raise TypeError("Vector must be a numpy array")
 
     if n_dims == 1:
