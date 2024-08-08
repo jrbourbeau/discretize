@@ -104,6 +104,7 @@ Utilities for Curvilinear Meshes
 
 from discretize.utils.code_utils import is_scalar, as_array_n_by_dim, requires
 from discretize.utils.matrix_utils import (
+    is_arraylike,
     mkvc,
     sdiag,
     sdinv,

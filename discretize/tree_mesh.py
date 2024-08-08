@@ -89,7 +89,7 @@
 from discretize.base import BaseTensorMesh
 from discretize.operators import InnerProducts, DiffOperators
 from discretize.mixins import InterfaceMixins, TreeMeshIO
-from discretize.utils import as_array_n_by_dim
+from discretize.utils import as_array_n_by_dim, is_arraylike
 from discretize._extensions.tree_ext import _TreeMesh, TreeCell  # NOQA F401
 import numpy as np
 import scipy.sparse as sp

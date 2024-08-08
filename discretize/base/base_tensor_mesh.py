@@ -5,6 +5,7 @@ import scipy.sparse as sp
 
 from discretize.base.base_regular_mesh import BaseRegularMesh
 from discretize.utils import (
+    is_arraylike,
     is_scalar,
     as_array_n_by_dim,
     unpack_widths,
@@ -100,7 +101,8 @@ class BaseTensorMesh(BaseRegularMesh):
                 h_i = self._unitDimensions[i] * np.ones(int(h_i)) / int(h_i)
             elif isinstance(h_i, (list, tuple)):
                 h_i = unpack_widths(h_i)
-            if not isinstance(h_i, np.ndarray):
+            # if not isinstance(h_i, np.ndarray):
+            if not is_arraylike(h_i):
                 raise TypeError("h[{0:d}] is not a numpy array.".format(i))
             if len(h_i.shape) != 1:
                 raise ValueError("h[{0:d}] must be a 1D numpy array.".format(i))
