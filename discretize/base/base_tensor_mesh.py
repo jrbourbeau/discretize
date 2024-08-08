@@ -141,18 +141,18 @@ class BaseTensorMesh(BaseRegularMesh):
     def origin(self, value):  # NOQA D102
         # ensure value is a 1D array at all times
         try:
-            value = value.tolist()
+            value_ = value.tolist()
         except TypeError:
             raise TypeError("origin must be iterable")
-        if len(value) != self.dim:
+        if len(value_) != self.dim:
             raise ValueError("Dimension mismatch. len(origin) != len(h)")
-        for i, (val, h_i) in enumerate(zip(value, self.h)):
+        for i, (val, h_i) in enumerate(zip(value_, self.h)):
             if val == "C":
-                value[i] = -h_i.sum() * 0.5
+                value_[i] = -h_i.sum() * 0.5
             elif val == "N":
-                value[i] = -h_i.sum()
-        value = np.asarray(value, dtype=np.float64, like=value)
-        self._origin = value
+                value_[i] = -h_i.sum()
+        value_ = np.asarray(value_, dtype=np.float64, like=value)
+        self._origin = value_
 
     @property
     def nodes_x(self):
