@@ -6065,8 +6065,8 @@ cdef class _TreeMesh:
     def __setstate__(self, state):
         """Set the current state of the TreeMesh."""
         indArr, levels = state
-        indArr = np.asarray(indArr)
-        levels = np.asarray(levels)
+        indArr = np.asarray(indArr, like=indArr)
+        levels = np.asarray(levels, like=levels)
         xs = np.array(self._xs)
         ys = np.array(self._ys)
         if self._dim == 3:
